@@ -8,14 +8,19 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "notification_id")
+    @Column(name = "user_id")
     private Long id;
 
     @Column(nullable = false)
     private String email;
+
+    public User(String email) {
+        this.email = email;
+    }
 }
