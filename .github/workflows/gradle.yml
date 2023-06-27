@@ -32,7 +32,7 @@ jobs:
         run: chmod +x ./notification/gradlew
 
       - name: spotless check
-        run: ./gradlew spotlessCheck
+        run: ./notification/gradlew spotlessCheck
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
