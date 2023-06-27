@@ -23,4 +23,8 @@ public class User {
     public User(String email) {
         this.email = email;
     }
+
+    public boolean matchId(Long id) {
+        return this.id.equals(id);
+    }
 }

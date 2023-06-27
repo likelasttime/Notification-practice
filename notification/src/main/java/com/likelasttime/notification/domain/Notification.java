@@ -4,6 +4,7 @@ package com.likelasttime.notification.domain;
 import java.time.LocalDateTime;
 import javax.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -39,4 +40,20 @@ public class Notification {
     private PushCase pushCase;
 
     private Long pathId;
+
+    @Builder
+    public Notification(
+            String message,
+            LocalDateTime pushTime,
+            PushStatus pushStatus,
+            User user,
+            PushCase pushCase,
+            Long pathId) {
+        this.message = message;
+        this.pushTime = pushTime;
+        this.pushStatus = pushStatus;
+        this.user = user;
+        this.pushCase = pushCase;
+        this.pathId = pathId;
+    }
 }
