@@ -13,7 +13,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "notification_id")
+    @Column(name = "post_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,4 +22,9 @@ public class Post {
 
     @Column(nullable = false)
     private String content;
+
+    public Post(User user, String content) {
+        this.user = user;
+        this.content = content;
+    }
 }
