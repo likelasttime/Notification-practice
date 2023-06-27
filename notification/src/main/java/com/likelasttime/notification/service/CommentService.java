@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -33,5 +34,9 @@ public class CommentService {
         applicationEventPublisher.publishEvent(new CommentCreateEvent(comment));
 
         return comment.getId();
+    }
+
+    public Comment find(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(RuntimeException::new);
     }
 }
