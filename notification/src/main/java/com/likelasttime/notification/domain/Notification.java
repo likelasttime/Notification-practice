@@ -56,4 +56,9 @@ public class Notification {
         this.pushCase = pushCase;
         this.pathId = pathId;
     }
+
+    public boolean isPushable(LocalDateTime now) {
+        return pushStatus == PushStatus.IN_COMPLETE
+                && (pushTime.isBefore(now) || pushTime.isEqual(now));
+    }
 }
