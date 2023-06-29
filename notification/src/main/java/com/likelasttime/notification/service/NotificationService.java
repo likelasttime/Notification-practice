@@ -37,4 +37,9 @@ public class NotificationService {
                 .filter(notification -> notification.isPushable(now))
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void completeAll(List<Notification> notifications) {
+        notificationRepository.updatePushStatusIn(notifications, PushStatus.COMPLETE);
+    }
 }
