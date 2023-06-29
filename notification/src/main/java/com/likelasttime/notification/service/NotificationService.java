@@ -4,6 +4,7 @@ package com.likelasttime.notification.service;
 import com.likelasttime.notification.domain.Notification;
 import com.likelasttime.notification.domain.PushCase;
 import com.likelasttime.notification.domain.PushStatus;
+import com.likelasttime.notification.domain.User;
 import com.likelasttime.notification.repository.NotificationRepository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,5 +42,9 @@ public class NotificationService {
     @Transactional
     public void completeAll(List<Notification> notifications) {
         notificationRepository.updatePushStatusIn(notifications, PushStatus.COMPLETE);
+    }
+
+    public List<Notification> findAllLatestOrderByDesc(User user, PushStatus pushStatus) {
+        return notificationRepository.findAllLatestOrderByDesc(user, pushStatus);
     }
 }

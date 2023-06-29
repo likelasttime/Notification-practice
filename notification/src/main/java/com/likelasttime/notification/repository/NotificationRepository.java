@@ -4,6 +4,7 @@ package com.likelasttime.notification.repository;
 import com.likelasttime.notification.domain.Notification;
 import com.likelasttime.notification.domain.PushCase;
 import com.likelasttime.notification.domain.PushStatus;
+import com.likelasttime.notification.domain.User;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,11 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     void updatePushStatusIn(
             @Param("notifications") List<Notification> notifications,
             @Param("pushStatus") PushStatus pushStatus);
+
+    @Query(
+            "select pn from Notification pn "
+                    + "where pn.user = :user and pn.pushStatus = :pushStatus "
+                    + "order by pn.pushTime desc")
+    List<Notification> findAllLatestOrderByDesc(
+            @Param("user") User user, @Param("pushStatus") PushStatus pushStatus);
 }
