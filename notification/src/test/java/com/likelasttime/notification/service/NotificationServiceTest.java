@@ -55,8 +55,8 @@ public class NotificationServiceTest {
         assertThat(notificationRepository.findById(notification.getId())).isPresent();
     }
 
-    @DisplayName("발송 가능한 알림 조회")
     @Test
+    @DisplayName("발송 가능한 알림 조회")
     void searchPushable() {
         // given
         User user = userRepository.findAll().get(0);
@@ -103,5 +103,47 @@ public class NotificationServiceTest {
 
         // then
         assertThat(actual).map(Notification::getPathId).containsOnly(1L, 2L);
+    }
+
+    @Test
+    @DisplayName("알림들을 모두 발송 완료 상태로 변경")
+    void completeAll() {
+        // given
+        LocalDateTime now = LocalDateTime.now();
+        User user = userRepository.findAll().get(0);
+
+        Notification notification1 =
+                Notification.builder()
+                        .user(user)
+                        .pathId(1L)
+                        .pushTime(now.minusMinutes(2L))
+                        .pushStatus(PushStatus.IN_COMPLETE)
+                        .pushCase(PushCase.COMMENT)
+                        .message("알림 전송")
+                        .build();
+
+        notificationRepository.save(notification1);
+
+        Notification notification2 =
+                Notification.builder()
+                        .user(user)
+                        .pathId(2L)
+                        .pushTime(now.minusMinutes(3L))
+                        .pushStatus(PushStatus.IN_COMPLETE)
+                        .pushCase(PushCase.COMMENT)
+                        .message("알림 전송")
+                        .build();
+
+        notificationRepository.save(notification2);
+
+        List<Notification> notifications = List.of(notification1, notification2);
+
+        // when
+        notificationService.completeAll(notifications);
+
+        // then
+        assertThat(notificationRepository.findAll())
+                .map(Notification::getPushStatus)
+                .containsExactly(PushStatus.COMPLETE, PushStatus.COMPLETE);
     }
 }
