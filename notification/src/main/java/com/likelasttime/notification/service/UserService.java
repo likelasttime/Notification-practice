@@ -16,4 +16,8 @@ public class UserService {
     public void joinUser(UserRequest userRequest) {
         userRepository.save(new User(userRequest.getEmail()));
     }
+
+    public User search(Long userId) {
+        return userRepository.findById(userId).orElseThrow(RuntimeException::new);
+    }
 }
