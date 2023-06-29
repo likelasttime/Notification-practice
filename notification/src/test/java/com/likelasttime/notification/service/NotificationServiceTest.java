@@ -192,15 +192,12 @@ public class NotificationServiceTest {
         notificationRepository.save(notification3);
 
         // when
-        List<Notification> actual = notificationService.findAllLatestOrderByDesc(user, PushStatus.COMPLETE);
+        List<Notification> actual =
+                notificationService.findAllLatestOrderByDesc(user, PushStatus.COMPLETE);
 
         // then
         assertAll(
                 () -> assertThat(actual).hasSize(2),
-                () -> assertThat(actual).map(Notification::getPathId)
-                        .containsExactly(1L, 2L)
-        );
+                () -> assertThat(actual).map(Notification::getPathId).containsExactly(1L, 2L));
     }
-
-
 }
