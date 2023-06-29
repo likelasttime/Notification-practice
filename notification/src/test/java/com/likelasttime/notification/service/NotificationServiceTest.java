@@ -1,6 +1,7 @@
 package com.likelasttime.notification.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.likelasttime.notification.domain.Notification;
 import com.likelasttime.notification.domain.PushCase;
@@ -146,4 +147,60 @@ public class NotificationServiceTest {
                 .map(Notification::getPushStatus)
                 .containsExactly(PushStatus.COMPLETE, PushStatus.COMPLETE);
     }
+
+    @Test
+    @DisplayName("발송된 알림 조회")
+    void findAllLatestOrderByDesc() {
+        // given
+        LocalDateTime now = LocalDateTime.now();
+        User user = userRepository.findAll().get(0);
+
+        Notification notification1 =
+                Notification.builder()
+                        .user(user)
+                        .pathId(1L)
+                        .pushTime(now)
+                        .pushStatus(PushStatus.COMPLETE)
+                        .pushCase(PushCase.COMMENT)
+                        .message("알림 전송")
+                        .build();
+
+        notificationRepository.save(notification1);
+
+        Notification notification2 =
+                Notification.builder()
+                        .user(user)
+                        .pathId(2L)
+                        .pushTime(now.minusDays(1))
+                        .pushStatus(PushStatus.COMPLETE)
+                        .pushCase(PushCase.COMMENT)
+                        .message("알림 전송")
+                        .build();
+
+        notificationRepository.save(notification2);
+
+        Notification notification3 =
+                Notification.builder()
+                        .user(user)
+                        .pathId(3L)
+                        .pushTime(now.minusDays(2))
+                        .pushStatus(PushStatus.IN_COMPLETE)
+                        .pushCase(PushCase.COMMENT)
+                        .message("알림 전송")
+                        .build();
+
+        notificationRepository.save(notification3);
+
+        // when
+        List<Notification> actual = notificationService.findAllLatestOrderByDesc(user, PushStatus.COMPLETE);
+
+        // then
+        assertAll(
+                () -> assertThat(actual).hasSize(2),
+                () -> assertThat(actual).map(Notification::getPathId)
+                        .containsExactly(1L, 2L)
+        );
+    }
+
+
 }
