@@ -200,4 +200,54 @@ public class NotificationServiceTest {
                 () -> assertThat(actual).hasSize(2),
                 () -> assertThat(actual).map(Notification::getPathId).containsExactly(1L, 2L));
     }
+
+    @Test
+    @DisplayName("보낸 알림을 모두 삭제한다.")
+    void deleteByUser() {
+        // given
+        LocalDateTime now = LocalDateTime.now();
+        User user = userRepository.findAll().get(0);
+
+        Notification notification1 =
+                Notification.builder()
+                        .user(user)
+                        .pathId(1L)
+                        .pushTime(now.minusHours(2))
+                        .pushStatus(PushStatus.COMPLETE)
+                        .pushCase(PushCase.COMMENT)
+                        .message("알림 전송")
+                        .build();
+
+        notificationRepository.save(notification1);
+
+        Notification notification2 =
+                Notification.builder()
+                        .user(user)
+                        .pathId(2L)
+                        .pushTime(now.minusHours(2))
+                        .pushStatus(PushStatus.COMPLETE)
+                        .pushCase(PushCase.COMMENT)
+                        .message("알림 전송")
+                        .build();
+
+        notificationRepository.save(notification2);
+
+        Notification notification3 =
+                Notification.builder()
+                        .user(user)
+                        .pathId(3L)
+                        .pushTime(now.plusMinutes(2))
+                        .pushStatus(PushStatus.IN_COMPLETE)
+                        .pushCase(PushCase.COMMENT)
+                        .message("알림 전송")
+                        .build();
+
+        notificationRepository.save(notification3);
+
+        // when
+        notificationService.deleteCompletedByUser(user);
+
+        // then
+        assertThat(notificationRepository.findAll()).hasSize(1);
+    }
 }

@@ -47,4 +47,9 @@ public class NotificationService {
     public List<Notification> findAllLatestOrderByDesc(User user, PushStatus pushStatus) {
         return notificationRepository.findAllLatestOrderByDesc(user, pushStatus);
     }
+
+    @Transactional
+    public void deleteCompletedByUser(User user) {
+        notificationRepository.deleteByUserAndPushStatus(user, PushStatus.COMPLETE);
+    }
 }

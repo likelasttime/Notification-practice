@@ -31,4 +31,9 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
                     + "order by pn.pushTime desc")
     List<Notification> findAllLatestOrderByDesc(
             @Param("user") User user, @Param("pushStatus") PushStatus pushStatus);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("delete from Notification pn " + "where pn.user = :user and pn.pushStatus = :pushStatus")
+    void deleteByUserAndPushStatus(
+            @Param("user") User user, @Param("pushStatus") PushStatus pushStatus);
 }
